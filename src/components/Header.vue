@@ -1,7 +1,9 @@
 <template>
   <header>
     <div class="logo" stlye="font-family:font-family: 'Shadows Into Light Two', cursive;">
+      <a href="">
       <span>QuickResumer</span>
+      </a>
     </div>
     <div class="user">
       <button class="login"><a href="">登录</a></button>
@@ -9,7 +11,6 @@
     </div>
   </header>
 </template>
-
 <script>
 export default {
   name: 'Header',
@@ -20,7 +21,6 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 .logo{
@@ -34,7 +34,7 @@ text-shadow: 0 1px 1px  green;
   }
 }
 header{
-  background: #fff
+  background: #383333;
 
   ;
   display: flex;
@@ -53,11 +53,9 @@ header{
     display: inline-block;
     padding: 10px 20px;
     cursor: pointer;
-    
   }
    &:hover{
      background:rgb(97, 202, 167);
    }
 }
-
 </style>

@@ -1,55 +1,113 @@
 <template>
    <div class="editor">
-        <ul class="tabs">
-            <li class="active">
-           <svg class="icon svg-active" aria-hidden="true">
-              <use xlink:href="#icon-info"></use>
+      <nav>
+          <ul class="tabs">
+            <li v-for="i in [0,1,2,3,4,5,6]" 
+                :class="{active:currentInx === i}"
+                @click='currentInx = i'>
+           <svg :class="{svgActive:currentInx === i}" 
+                 class="icon">
+              <use :xlink:href="`#icon-${icons[i]}`"></use>
           </svg>
-          <div>Infomation</div>
-          </li>
-          <li class="">
-          <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-phone"></use>
-          </svg>
-           <div>Contact</div>
-          </li>
-          <li>
-         <div class="item">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-project"></use>
-          </svg>
-          <div>Projects</div>
-         </div>
-          </li>
-          <li>
-          <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-company"></use>
-          </svg>
-          <div>Company</div>
-          </li>
-          <li>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-education"></use>
-          </svg>
-          <div>Education</div>
-          </li>
-          <li>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-jiangbei"></use>
-          </svg>
-          <div>Award</div>
+          <div>{{msg[i]}}</div>
           </li>
         </ul>  
-   <div class="type">
-            1
-   </div>
+      </nav> 
+  <ol>
+    <li v-if="currentInx === 0">
+      <ProfileEditor :profile="profile"/>
+    </li>
+    <li v-if="currentInx === 1">
+    <h1></h1>
+    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    </li>
+        <li v-if="currentInx === 2">
+    <h1>About me</h1>
+    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    </li>
+        <li v-if="currentInx === 3">
+    <h1>About me</h1>
+    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    </li>
+    <li v-if="currentInx === 4"
+    >
+      <h1>Work Experence</h1>
+      <el-button type="primary"  class="add-button" @click="addNew"><i class="el-icon-circle-plus-outline"></i></el-button>
+      <div v-for="(work,index) in workExp">
+  <el-form style="position:relative;">
+    <el-form-item label="Company">
+    <el-input v-model="work.company"></el-input>
+  </el-form-item>
+      <el-form-item label="Time">
+    <el-input v-model="work.time"></el-input>
+  </el-form-item>
+  <el-form-item label="Job Duties">
+    <el-input
+  type="textarea"
+  :rows="6"
+  placeholder="请输入内容"
+  v-model="work.content">
+</el-input>
+  </el-form-item>
+    </el-form>
+ <el-button type="danger" class="delete-button" @click="removeWorkExp(index)"><i class="el-icon-delete"></i></el-button>
+ </div>
+    </li>
+    <li v-if="currentInx === 5">
+    <h2>About me</h2>
+    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    </li>
+        <li v-if="currentInx === 6">
+    <h2>About me</h2>
+    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    </li>
+  </ol>
    </div>
 </template>
 <script>
+import ProfileEditor from './ProfileEditor'
 export default {
   name: "Editor",
+  components:{
+    ProfileEditor
+  },
   data() {
-    return {};
+    return {
+      currentInx: 0,
+      msg: [
+        "Infomation",
+        "Contact",
+        "Projects",
+        "Skill",
+        "Company",
+        "Education",
+        "Award"
+      ],
+      icons: [
+        "info",
+        "phone",
+        "project",
+        "zhuanyejineng",
+        "company",
+        "education",
+        "jiangbei"
+      ],
+      profile: {
+        name: "",
+        age: "",
+        city: "",
+        title: ""
+      },
+      workExp: [{ company: "", content: "", time: "" }]
+    };
+  },
+  methods: {
+    addNew() {
+      this.workExp.push({ company: "", content: "", tiem: "" });
+    },
+    removeWorkExp(index) {
+      this.workExp.splice(index, 1);
+    }
   }
 };
 </script>
@@ -60,35 +118,60 @@ export default {
   border-radius: 5px;
   margin: 20px 15px 15px 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-  height:100%;
-  border:1px solid red;
+  height: 100%;
 }
-.tabs{
-  float:left;
+.tabs {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  width: 10em;
-  height:inherit;
-  margin:0;
-  background: #fff;
+  width: 9em;
+  height: inherit;
+  margin: 0;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.75);
   border-radius: 5px;
-  box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.4);
-  overflow:auto;
-  li{
-    padding:14px 40.3px;
-    text-align:center;
-    color:#B5C1C7;
-    position:relative;
-    cursor:pointer;
-    div{
-      padding-top:8px;
-      color:inherit;
+  box-shadow: 2px 0px 6px rgba(0, 0, 0, 0.4);
+  overflow: auto;
+  li {
+    padding: 12px;
+    text-align: center;
+    color: rgba(71, 155, 197, 0.7);
+    position: relative;
+    cursor: pointer;
+    div {
+      padding-top: 8px;
+      color: inherit;
+    }
+  }
+  @media (max-width: 1366px) {
+    li {
+      padding: 7px 40.3px;
     }
   }
 }
-.type{
-  margin-left: 10em;
+nav {
+  height: 100%;
+  float: left;
+}
+ol {
+  height: 100%;
+  padding: 1em;
+  margin-left: 9em;
+  overflow: auto;
+  li {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    .add-button {
+      width: 65px;
+      min-height: 40px;
+      align-self: flex-end;
+      background-color: #1da496;
+    }
+    .delete-button {
+      margin-bottom: 5px;
+    }
+  }
 }
 </style>
 
