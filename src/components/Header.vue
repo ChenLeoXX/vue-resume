@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div class="logo" stlye="font-family:font-family: 'Shadows Into Light Two', cursive;">
+    <div class="logo">
       <a href="">
       <span>QuickResumer</span>
       </a>

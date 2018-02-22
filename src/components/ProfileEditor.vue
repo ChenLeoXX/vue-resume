@@ -1,6 +1,5 @@
 <template>
-<div>
-      <h1>About me</h1>
+
       <div>
         <el-form>
           <el-form-item label="Name">
@@ -20,7 +19,6 @@
           </el-form-item>
         </el-form>
       </div>
-</div>
 </template>
 <script>
 export default {

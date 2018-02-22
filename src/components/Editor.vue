@@ -4,7 +4,7 @@
           <ul class="tabs">
             <li v-for="i in [0,1,2,3,4,5,6]" 
                 :class="{active:currentInx === i}"
-                @click='currentInx = i'>
+                @click='currentInx = i' :key>
            <svg :class="{svgActive:currentInx === i}" 
                  class="icon">
               <use :xlink:href="`#icon-${icons[i]}`"></use>
@@ -15,10 +15,11 @@
       </nav> 
   <ol>
     <li v-if="currentInx === 0">
+      <h1>About me</h1>
       <ProfileEditor :profile="profile"/>
     </li>
     <li v-if="currentInx === 1">
-    <h1></h1>
+    <h1>Contact</h1>
     <el-input v-model="input" placeholder="请输入内容"></el-input>
     </li>
         <li v-if="currentInx === 2">
@@ -29,29 +30,10 @@
     <h1>About me</h1>
     <el-input v-model="input" placeholder="请输入内容"></el-input>
     </li>
-    <li v-if="currentInx === 4"
-    >
+    <li v-if="currentInx === 4">
       <h1>Work Experence</h1>
       <el-button type="primary"  class="add-button" @click="addNew"><i class="el-icon-circle-plus-outline"></i></el-button>
-      <div v-for="(work,index) in workExp">
-  <el-form style="position:relative;">
-    <el-form-item label="Company">
-    <el-input v-model="work.company"></el-input>
-  </el-form-item>
-      <el-form-item label="Time">
-    <el-input v-model="work.time"></el-input>
-  </el-form-item>
-  <el-form-item label="Job Duties">
-    <el-input
-  type="textarea"
-  :rows="6"
-  placeholder="请输入内容"
-  v-model="work.content">
-</el-input>
-  </el-form-item>
-    </el-form>
- <el-button type="danger" class="delete-button" @click="removeWorkExp(index)"><i class="el-icon-delete"></i></el-button>
- </div>
+      <WorkExpEditor :workExp="workExp"/>
     </li>
     <li v-if="currentInx === 5">
     <h2>About me</h2>
@@ -66,9 +48,11 @@
 </template>
 <script>
 import ProfileEditor from './ProfileEditor'
+import WorkExpEditor from './WorkExpEditor'
 export default {
   name: "Editor",
   components:{
+    WorkExpEditor,
     ProfileEditor
   },
   data() {
@@ -98,15 +82,12 @@ export default {
         city: "",
         title: ""
       },
-      workExp: [{ company: "", content: "", time: "" }]
+      workExp: [{ company: "", content: "", duration: "" }]
     };
   },
   methods: {
     addNew() {
-      this.workExp.push({ company: "", content: "", tiem: "" });
-    },
-    removeWorkExp(index) {
-      this.workExp.splice(index, 1);
+      this.workExp.push({ company: "", content: "", duration: "" });
     }
   }
 };
