@@ -1,6 +1,6 @@
 <template>
    <div class="editor">
-     <!-- todos 把联系方式组件和个人信息组件结合成一个组件 -->
+     <!-- todos 把联系方式组件和个人信息组件结合成一个组件 完成√ -->
      <!-- todos 实现一个头像上传 -->
      <!-- 左侧导航 -->
       <nav>
@@ -21,49 +21,40 @@
     <li v-if="currentInx === 0">
       <h1>About me</h1>
       <!-- 个人信息组件 -->
-      <ProfileEditor :profile="profile"/>
+      <PersonInfoEditor :items="profile" :labels="{name:'姓名',sex:'性别',age:'年龄',city:'城市'}"/>
     </li>
     <li v-if="currentInx === 1">
     <h1>Contact</h1>
-    <el-form>
-      <el-form-item label="手机">
-            <el-input v-model="profile.name"></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱">
-            <el-input v-model="profile.name"></el-input>
-      </el-form-item>
-      <el-form-item label="微信">
-            <el-input v-model="profile.name"></el-input>
-      </el-form-item>
-      <el-form-item label="Github">
-            <el-input v-model="profile.name"></el-input>
-      </el-form-item>
-      <el-form-item label="博客">
-            <el-input v-model="profile.name"></el-input>
-      </el-form-item>
-    </el-form>
+    <!-- 联系方式 -->
+      <PersonInfoEditor :items="contact" :labels="{phone:'手机',email:'邮箱',wechat:'微信',github:'Github',blog:'博客'}"/>
     </li>
         <li v-if="currentInx === 2">
     <h1>Projects</h1>
+    <!-- 项目经历 -->
      <el-button type="primary"  class="add-button" @click="addProjectItem"><i class="el-icon-circle-plus-outline"></i></el-button>
     <ProjectEditor :items="projectExp"/>
     </li>
         <li v-if="currentInx === 3">
-    <h1>Skill</h1>
-    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    <h1>Ability</h1>
+    <!-- 职业技能 -->
+    <el-button type="primary"  class="add-button" @click="addSkillItem"><i class="el-icon-circle-plus-outline"></i></el-button>
+    <SkillEditor :items="ability"/>
     </li>
     <li v-if="currentInx === 4">
       <h1>Work Experience</h1>
+      <!-- 工作经验 -->
       <el-button type="primary"  class="add-button" @click="addWorkItem"><i class="el-icon-circle-plus-outline"></i></el-button>
       <WorkExpEditor :items="workExp"/>
     </li>
     <li v-if="currentInx === 5">
     <h1>Education Experience</h1>
+    <!-- 教育经历 -->
      <el-button type="primary"  class="add-button" @click="addEducationItem"><i class="el-icon-circle-plus-outline"></i></el-button>
     <SingleInputEditor :items="studyExp" :labels="{school:'学校',duration:'时间',degree:'学位'}"/>
     </li>
     <li v-if="currentInx === 6">
     <h1>Award</h1>
+    <!-- 获奖情况 -->
     <el-button type="primary"  class="add-button" @click="addAwardItem"><i class="el-icon-circle-plus-outline"></i></el-button>
     <SingleInputEditor :items="awardExp" :labels="{award:'奖项'}"/>
     </li>
@@ -71,17 +62,20 @@
    </div>
 </template>
 <script>
-import ProfileEditor from './ProfileEditor'
+import PersonInfoEditor from './PersonInfoEditor'
 import WorkExpEditor from './WorkExpEditor'
 import SingleInputEditor from './SingleInputEditor'
 import ProjectEditor from './ProjectExpEditor'
+import SkillEditor from './SkillEditor'
 export default {
   name: "Editor",
   components:{
     WorkExpEditor,
-    ProfileEditor,
+    PersonInfoEditor,
     SingleInputEditor,
-    ProjectEditor
+    ProjectEditor,
+    SkillEditor
+
   },
   data() {
     return {
@@ -106,13 +100,22 @@ export default {
       ],
       profile: {
         name: "",
+        sex:"",
         age: "",
         city: ""
       },
-      workExp: [{company: "",content: "",duration: ""}],
+      contact:{
+        phone:"",
+        email:"",
+        wechat:"",
+        github:"",
+        blog:""
+      },
+      workExp: [{company: "",time: "",details: ""}],
       studyExp:[{school:"",duration:"",degree:""}],
       awardExp:[{award:''}],
-      projectExp:[{project:'',details:''}]
+      projectExp:[{project:'',details:''}],
+      ability:[{value:50,skill:'JavaScript'}]
     };
   },
   computed:{
@@ -130,6 +133,9 @@ export default {
     },
     addProjectItem(){
       this.projectExp.push({project:"",details:""})
+    },
+    addSkillItem(){
+      this.ability.push({value:0})
     }
   }
 };
