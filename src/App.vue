@@ -2,21 +2,47 @@
   <div id="app">
     <Header></Header>
     <main>  
-     <Editor></Editor>
-     <Preview></Preview>
+     <Editor :resume="resume"></Editor>
+     <Preview :resume="resume"></Preview>
     </main>
   </div>
 </template>
 <script>
 import Header from "./components/Header";
-import Preview from "./components/Preview.vue";
-import Editor from "./components/Editor.vue";
+import Preview from "./components/Preview";
+import Editor from "./components/Editor";
+import AvatarUploader from "./components/AvatarUploader"
 export default {
   name: "app",
+  data(){
+    return {
+        resume:{
+           profile: {
+        name: "",
+        sex:"",
+        age: "",
+        city: ""
+      },    
+       contact:{
+        phone:"",
+        email:"",
+        wechat:"",
+        github:"",
+        blog:""
+      },
+          workExp: [{company: "",time: "",details: ""}],
+          studyExp:[{school:"",duration:"",degree:""}],
+          awardExp:[{award:''}],
+          projectExp:[{project:'',details:''}],
+          ability:[{value:50,skill:'JavaScript'}]
+      }
+    }
+  },
   components: {
     Header,
     Preview,
-    Editor
+    Editor,
+    AvatarUploader
   }
 };
 </script>
@@ -25,16 +51,22 @@ export default {
 html,
 body {
   height: 100%;
+  width: 100%;
 }
 main {
   height: 100%;
+   width: 100%;
   display: flex;
 }
 #app {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fafbfd;
+  width: 100%;
+background: #076585;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to top, #fff, #076585);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top, #fff, #076585); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 .icon {
   width: 1em;
