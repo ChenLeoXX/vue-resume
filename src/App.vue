@@ -21,20 +21,22 @@ export default {
         name: "",
         sex:"",
         age: "",
-        city: ""
+        city: "",
+        title:"",
+        degree:"",
       },    
        contact:{
-        phone:"",
+        phone1:"",
         email:"",
         wechat:"",
         github:"",
         blog:""
       },
           workExp: [{company: "",time: "",details: ""}],
-          studyExp:[{school:"",duration:"",degree:""}],
+          studyExp:[{school:"",duration:""}],
           awardExp:[{award:''}],
           projectExp:[{project:'',details:''}],
-          ability:[{value:50,skill:'JavaScript'}]
+          ability:[{value:50,skill:'JavaScript',color:"#ef69b3"}]
       }
     }
   },
@@ -64,8 +66,8 @@ main {
   height: 100%;
   width: 100%;
 background: #076585;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to top, #fff, #076585);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to top, #fff, #076585); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: -webkit-linear-gradient(to top, #fff, #076585);
+background: linear-gradient(to top, #fff, #076585); 
 
 }
 .icon {

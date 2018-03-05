@@ -1,7 +1,7 @@
 <template>
   <div class="uploader">
       <img :src="imgSrc" alt="avatar">
-      <input type="file" name="" id="select"  @change="select()" ref="selector">
+      <input type="file" name="" id="select"  @change="select()" ref="selector" accept="image/png,image/jpeg">
   </div>
 </template>
 <script>
@@ -26,15 +26,15 @@ data(){
    position: relative;
    img{
     display:block;
-    border-radius:50%;
-    width: 220px;
-    height: 220px;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
     }
     input{
     display: inline-block;
     position: absolute;
-    width: 220px;
-    height: 220px;
+    width: 120px;
+    height: 120px;
     top:0px;
     left:0px;
     border-radius:50%;

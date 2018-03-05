@@ -21,12 +21,12 @@
     <li v-if="currentInx === 0">
       <h1>About me</h1>
       <!-- 个人信息组件 -->
-      <PersonInfoEditor :items="resume.profile" :labels="{name:'姓名',sex:'性别',age:'年龄',city:'城市'}"/>
+      <PersonInfoEditor :items="resume.profile" :labels="{name:'姓名',sex:'性别',age:'年龄',city:'城市',title:'求职岗位',degree:'学位'}"/>
     </li>
     <li v-if="currentInx === 1">
     <h1>Contact</h1>
     <!-- 联系方式 -->
-      <PersonInfoEditor :items="resume.contact" :labels="{phone:'手机',email:'邮箱',wechat:'微信',github:'Github',blog:'博客'}"/>
+      <PersonInfoEditor :items="resume.contact" :labels="{phone1:'手机',email:'邮箱',wechat:'微信',github:'Github',blog:'博客'}"/>
     </li>
         <li v-if="currentInx === 2">
     <h1>Projects</h1>
@@ -50,7 +50,7 @@
     <h1>Education Experience</h1>
     <!-- 教育经历 -->
      <el-button type="primary"  class="add-button" @click="addEducationItem"><i class="el-icon-circle-plus-outline"></i></el-button>
-    <SingleInputEditor :items="resume.studyExp" :labels="{school:'学校',duration:'时间',degree:'学位'}"/>
+    <SingleInputEditor :items="resume.studyExp" :labels="{school:'学校',duration:'时间'}"/>
     </li>
     <li v-if="currentInx === 6">
     <h1>Award</h1>
@@ -98,6 +98,7 @@ export default {
         "education",
         "jiangbei"
       ],
+      skillColor:['#ffaa4f', '#ef69b3','#9f9be8', '#f7bec9','#97daae', '#9bd1e0'],//随机16进制颜色
     };
   },
   methods: {
@@ -114,7 +115,11 @@ export default {
       this.resume.projectExp.push({project:"",details:""})
     },
     addSkillItem(){
-      this.resume.ability.push({value:0})
+      let obj = {value:50,skill:'JavaScript'}
+      let len = this.skillColor.length-1
+      let randomColor = this.skillColor[Math.floor(Math.random()*len)]
+      obj.color = randomColor
+      this.resume.ability.push(obj)
     },
     }
 };
@@ -122,11 +127,15 @@ export default {
 <style lang="scss">
 .editor {
   background-color: #fff;
-  width: 38em;
+  width: 34em;
   border-radius: 5px;
   margin: 20px 15px 15px 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  @media (max-width:1366px) {
+  width: 33em;
 }
+}
+
 .tabs {
   display: flex;
   flex-direction: column;
