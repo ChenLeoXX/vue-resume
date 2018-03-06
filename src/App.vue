@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header @showResume="showResume" v-show="Show"></Header>
     <main>  
-     <Editor :resume="resume"></Editor>
-     <Preview :resume="resume"></Preview>
+     <Editor :resume="resume"  v-show="Show"></Editor>
+     <Preview :resume="resume" :class="{showUp:!Show}"></Preview>
     </main>
+    <button class="showOut" @click="showOut" v-show="!Show">退出预览</button>
   </div>
 </template>
 <script>
@@ -16,7 +17,8 @@ export default {
   name: "app",
   data(){
     return {
-        resume:{
+      Show:true,
+      resume:{
            profile: {
         name: "",
         sex:"",
@@ -45,6 +47,14 @@ export default {
     Preview,
     Editor,
     AvatarUploader
+  },
+  methods:{
+    showResume(data){
+      this.Show= data
+    },
+    showOut(){
+      this.Show = true
+    }
   }
 };
 </script>
@@ -57,7 +67,6 @@ body {
 }
 main {
   height: 100%;
-   width: 100%;
   display: flex;
 }
 #app {
@@ -104,5 +113,24 @@ background: linear-gradient(to top, #fff, #076585);
   background: #fafbfd;
   font-weight: bold;
   box-shadow: 3px 2px 6px rgba(0, 0, 0, 0.4);
+ }
+ .showOut{
+   width:100px;
+   padding: 15px;
+   border-radius: 5px;
+   background:#3cafa3;
+   border:0;
+   outline: none;
+   color:snow;
+   position: fixed;
+   bottom:25px;
+   right:55px;
+   cursor: pointer;
+ }
+ .showOut:hover{
+   background: rgba(60,175,163,.8)
+ }
+ .showUp{
+   margin: 20px auto !important;
  }
 </style>

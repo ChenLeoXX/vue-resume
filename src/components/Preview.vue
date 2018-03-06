@@ -106,6 +106,7 @@ export default {
   margin:20px 15px 15px 20px;
   border-radius: 5px;  
   flex: 1;
+  max-width:1000px;
   background:#ececec;
   box-shadow: 0 3px 6px  rgba(0,0,0,0.4);
   display: flex;
