@@ -132,5 +132,5 @@ background: linear-gradient(to top, #fff, #076585);
  }
  .showUp{
    margin: 20px auto !important;
- }
+ } 
 </style>

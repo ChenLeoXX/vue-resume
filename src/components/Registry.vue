@@ -1,29 +1,36 @@
 <template>
+<transition name="fade">
  <div class="coverPaper" v-show="active">
     <div class="registry">
       <header>注册 <i class="el-icon-close" @click="close"></i></header>
-      <form action="" class="action">
+      <form  class="action" @submit.prevent="signUp">
           <div id="account">
             <label for="account"  :class="{Ontransform:accountTrans}">账号</label>
-            <input type="text" @focus="inputFoucs($event)" @blur="inputBlur($event)" required >
+            <input type="text" v-model.trim="formData.username" @focus="inputFoucs($event)" @blur="inputBlur($event)" required >
           </div>
           <div id="password">
             <label for="password"  :class="{Ontransform:passwordTrans}">密码</label>
-            <input type="password" @focus="inputFoucs($event)" @blur="inputBlur($event)" required>
+            <input type="password" v-model.trim="formData.password" @focus="inputFoucs($event)" @blur="inputBlur($event)" required>
           </div>
           <input type="submit" value="注册" class="submit">
       </form>
     </div>
 </div>
+</transition>
 </template>
 <script>
+import AV from 'leancloud-storage'
 export default {
   name:'Registry',
   props:['active'],
   data(){
     return{
       accountTrans:false,
-      passwordTrans:false
+      passwordTrans:false,
+      formData:{
+        username:"",
+        password:""
+      }
       }
   },
     methods:{
@@ -52,6 +59,17 @@ export default {
           this.passwordTrans=false;
           e.target.style.borderBottom = '2px solid gray'
       }
+    },
+    signUp(){
+      let user = new AV.User()
+      user.setUsername(this.formData.username)
+      user.setPassword(this.formData.password)
+      user.signUp().then(function(signupUser){
+        console.log(signupUser)
+        // console.log(AV.User.current())
+      },function(error){
+        alert(error.rawMessage)
+      })
     }
   }
 }
@@ -138,5 +156,11 @@ export default {
   transition-duration:.3s;
   transition-timing-function:ease-out;
   color:rgb(64, 158, 255)!important;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

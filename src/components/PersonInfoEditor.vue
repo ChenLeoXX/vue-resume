@@ -2,7 +2,7 @@
       <div>
         <el-form>
           <el-form-item  v-for="(value,key) in items" :label="labels[key]" :key="key">
-            <el-input v-model="items[key]"></el-input>
+            <el-input v-model="items[key]" autofocus="autofocus" auto-complete="on"></el-input>
            </el-form-item>
         </el-form>                                                                                                                                                                                   
       </div>
