@@ -7,7 +7,7 @@
       </a>
     </div>
     <div class="user">
-      <span class="user-name" v-if="hasLogin">您好,{{userInfo.username}}</span>
+      <span class="user-name" v-if="hasLogin">您好,{{currentuser.username}}</span>
       <button class="save" @click="save" v-if="hasLogin">保存</button>
       <button class="logout" @click="logout" v-if="hasLogin">注销</button>
       <button class="sign-in" @click="loginActive = true" v-if="!hasLogin">登录</button>
@@ -15,7 +15,7 @@
       <button class="resume-preview" @click="showResume">预览</button>
     </div>
     <!-- 登录注册组件利用父子间通信确定 active遮罩的出现隐藏 -->
-    <login :active="loginActive" @close="changeCover" @hasLogin="isLogin"/> 
+    <login :active="loginActive"   @close="changeCover" @hasLogin="isLogin"/> 
     <registry :active="registryActive" @close="changeCover"/> 
   </header>
 </div>  
@@ -26,38 +26,116 @@ import Login from './Login'
 import Registry from './Registry'
 export default {
   name: 'Header',
+  props:['resume'],
   components:{
   Login,
   Registry
   },
+  created(){
+    //在生命周期钩子里检测是否已经登录了后获取数据
+    this.currentuser =this.getCurrentUser()
+    this.fetchResume()
+  },
   data () {
     return {
-      loginActive:false,
+      currentuser :null,
+      loginActive:true,
       registryActive:false,
       hasLogin:false,
-      userInfo:null
+      userInfo:null,
+      fakeresume:this.resume
     }
   },
   methods:{
-    isLogin(userData){
-      if(userData !== null){
+    save(){
+      this.$message({
+            type:'success',
+            message:'保存成功'
+          })
+      this.saveOrUpdate()
+    },
+    fetchResume(){
+        if(this.currentuser){
+      this.loginActive=false
+      this.hasLogin = true
+      var query = new AV.Query('AllResume')
+      query.find().then((resume)=>{
+        let userResume = resume[0]
+        let id = userResume.id
+        this.fakeresume = userResume.attributes.content
+        this.fakeresume.id = id
+         this.saveOrUpdate()
+      },function(error){
+        console.log(error)
+      })
+    }
+    },
+    getCurrentUser(){
+       let current = AV.User.current()
+        if(current){
+            let {id,attributes:{username},createdAt} = current
+            return {id,username,createdAt}             
+        }else{
+          return null
+        }   
+    },
+    isLogin(){//根据子组件判断是否已经登录
+       this.currentuser = this.getCurrentUser()//登录之后调用AV.User.current()会返回当前登录用户的信息,如果没用登录调用的话返回null
+       this.fetchResume()
+      if(this.currentuser){
         this.hasLogin = true
-        this.userInfo = userData //传递用户信息
+        this.loginActive= false
       }
     },
-    save(){
-
+    saveOrUpdate(){
+      if(this.fakeresume.id){
+        this.updateResume()
+      }else{
+        this.saveResume()
+      }
     },
-    logout(){
+    updateResume(){
+      let userResume = AV.Object.createWithoutData('AllResume',this.fakeresume.id)
+      console.log(this.fakeresume)
+      userResume.set('content',this.fakeresume)
+      userResume.save().then(()=>{
+         this.$emit('save',this.fakeresume)//通知父组件改变数据
+         
+      },()=>{
+        this.$message({
+            type:'error',
+            message:'保存失败,请重试'
+          })
+      })
+    },
+    saveResume(){//保存简历数据
+      let Resume = AV.Object.extend('AllResume')
+      let userResume = new Resume()
+      let acl = new AV.ACL()
+      acl.setReadAccess(AV.User.current(),true)
+      acl.setWriteAccess(AV.User.current(),true)
+      userResume.set('content',this.fakeresume)
+      userResume.setACL(acl)
+      userResume.save().then((resume)=>{
+       this.fakeresume.id = resume.id
+         this.$message({
+            type:'success',
+            message:'保存成功'
+          })
+      },function(error){
+        alert(error.rawMessage)
+      })
+    },
+    logout(){//注销方法
       AV.User.logOut()
       this.userInfo = null
       window.location.reload()
     },
-    changeCover(data){
+    changeCover(data){//改变模态框
       console.log(data)
       this.registryActive = this.loginActive = data
     },
-    showResume(){
+    showResume(){//预览简历
       this.$emit('showResume',false)
     }
   }

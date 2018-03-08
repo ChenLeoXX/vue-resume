@@ -1,18 +1,19 @@
 <template>
 <transition name="fade">
- <div class="coverPaper" v-show="active">
+ <div class="coverPaper" v-show="active" @keyup.esc="esc">
     <div class="login">
       <header>登录 <i class="el-icon-close" @click="close"></i></header>
-      <form action="login" class="action" @submit.prevent="logIn($event)">
+      <div style="text-align:center;color:lightblue;"><span>测试账号:admin | 密码:admin123</span></div>
+      <form action="login" class="action" @submit.prevent="logIn()">
           <div id="account">
-            <label for="account"  :class="{Ontransform:accountTrans}">账号</label>
-            <input type="text"  v-model.trim="formData2.username" @focus="inputFoucs($event)" @blur="inputBlur($event)" required >
+            <label for="account"  :class="{Ontransform:accountTrans}">用户名</label>
+            <input type="text"  v-model.trim="formData2.username" @focus="inputFoucs($event)" @blur="inputBlur($event)" autofocus="autofocus" required >
           </div>
           <div id="password">
             <label for="password"  :class="{Ontransform:passwordTrans}">密码</label>
-            <input type="password" v-model.trim="formData2.password" @focus="inputFoucs($event)" @blur="inputBlur($event)" required >
+            <input type="password" v-model.trim="formData2.password" @focus="inputFoucs($event)" @blur="inputBlur($event)"  required >
           </div>
-          <div style="color:red; position:relative;top:15px;" v-show="error">密码或用户名错误</div>
+          <div class="error-msg" v-show="error">密码或用户名错误</div>
           <input type="submit" value="登录" class="submit">
       </form>
     </div>
@@ -36,32 +37,22 @@ export default {
       error:false
       }
   },
-  created(){
-    //在生命周期钩子里检测是否已经登录了
-    this.currentuser =this.getCurrentUser()
-    if(this.currentuser){
-      this.$emit('hasLogin',this.currentuser)//告诉父级组件已经是登录状态了并且传递用户信息(用于显示不修改)
-    }
-  },
     methods:{
-    logIn(e){
-      //登录之后调用AV.User.current()会返回当前登录用户的信息,如果没用登录调用的话返回null
+    esc(){
+        this.active = false
+        this.$emit('close',false)     
+    },
+    logIn(){     
       AV.User.logIn(this.formData2.username,this.formData2.password).then((loguser)=>{
-          this.currentuser = this.getCurrentUser()
-          this.$emit('hasLogin',this.currentuser)//告诉父级组件已经是登录状态了并且传递用户信息(用于显示不修改)
+          this.$emit('hasLogin')//告诉父级组件已经是登录状态了并且传递用户信息(用于显示不修改)
           this.close()
+          this.$message({
+            type:'success',
+            message:'登录成功'
+          })
       },(error)=>{
         this.error = true
       })
-    },
-    getCurrentUser(){
-       let current = AV.User.current()
-        if(current){
-            let {id,attributes:{username},createdAt} = current
-            return {id,username,createdAt}             
-        }else{
-          return null
-        }   
     },
     close(){
         this.active = false
@@ -94,15 +85,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.coverPaper{
-  position: fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom: 0;
-  background:rgba(0,0,0,0.5);
-  z-index:99;
-}
+
 .login{
   width:400px;
   border-radius:5px;

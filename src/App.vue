@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header @showResume="showResume" v-show="Show"></Header>
+    <Header @showResume="showResume" v-show="Show" :resume="resume" @save="saveResume"></Header>
     <main>  
      <Editor :resume="resume"  v-show="Show"></Editor>
      <Preview :resume="resume" :class="{showUp:!Show}"></Preview>
@@ -39,7 +39,7 @@ export default {
           awardExp:[{award:''}],
           projectExp:[{project:'',details:''}],
           ability:[{value:50,skill:'JavaScript',color:"#ef69b3"}]
-      }
+      },
     }
   },
   components: {
@@ -54,6 +54,10 @@ export default {
     },
     showOut(){
       this.Show = true
+    },
+    saveResume(data){
+      console.log(data)
+      this.resume = data
     }
   }
 };

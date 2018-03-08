@@ -15,6 +15,7 @@ AV.init({
   appId: APP_ID,
   appKey: APP_KEY
 });
+var bus = new Vue({})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

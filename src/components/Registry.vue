@@ -1,17 +1,20 @@
 <template>
 <transition name="fade">
- <div class="coverPaper" v-show="active">
+ <div class="coverPaper" v-show="active" @keyup.esc="esc">
     <div class="registry">
       <header>注册 <i class="el-icon-close" @click="close"></i></header>
       <form  class="action" @submit.prevent="signUp">
           <div id="account">
-            <label for="account"  :class="{Ontransform:accountTrans}">账号</label>
-            <input type="text" v-model.trim="formData.username" @focus="inputFoucs($event)" @blur="inputBlur($event)" required >
+            <label for="account"  :class="{Ontransform:accountTrans}">用户名</label>
+            <input type="text" v-model.trim="formData.username" @focus="inputFoucs($event)" @blur="inputBlur($event)" maxlength="16" required >
           </div>
           <div id="password">
             <label for="password"  :class="{Ontransform:passwordTrans}">密码</label>
-            <input type="password" v-model.trim="formData.password" @focus="inputFoucs($event)" @blur="inputBlur($event)" required>
+            <input type="password" v-model.trim="formData.password" @focus="inputFoucs($event)" @blur="inputBlur($event)" maxlength="16" required>
           </div>
+          <div class="error-msg" v-show="isErrorName">用户名需输入4-16个字符，不包括空格</div>
+          <div class="error-msg" v-show="isErrorWord">密码需输入8-16个字符，不包括空格</div>
+          <div class="error-msg" v-show="isExist">用户名已被注册</div>
           <input type="submit" value="注册" class="submit">
       </form>
     </div>
@@ -27,6 +30,9 @@ export default {
     return{
       accountTrans:false,
       passwordTrans:false,
+      isErrorName:false,
+      isErrorWord:false,
+      isExist:false,
       formData:{
         username:"",
         password:""
@@ -34,11 +40,15 @@ export default {
       }
   },
     methods:{
-    close(){
+      esc(){
+        this.active = false
+        this.$emit('close',false)     
+    },
+    close(){//关闭模态框,通知父组件更新状态
         this.active = false
         this.$emit('close',false)
     },
-    inputFoucs(e){
+    inputFoucs(e){//输入框聚焦特效
       switch(e.target.getAttribute('type')){
         case 'text':
           this.accountTrans=true;
@@ -49,9 +59,12 @@ export default {
         default:
         cosole.log(new Error())
       }
-      e.target.style.borderBottom='2px solid rgb(64, 158, 255)'
+      e.target.style.borderBottom='2px solid rgb(64, 158, 255)' //再次聚焦输入框取消错误提示
+      this.isExist = false
+      this.isErrorName= false
+      this.isErrorWord= false
     },
-    inputBlur(e){
+    inputBlur(e){//输入框失去焦点特效
       if( e.target.getAttribute('type') ==='text' && e.target.value === ''){
           this.accountTrans=false;
           e.target.style.borderBottom = '2px solid gray'
@@ -60,18 +73,34 @@ export default {
           e.target.style.borderBottom = '2px solid gray'
       }
     },
-    signUp(){
-      let user = new AV.User()
+    signUp(){//leancloud 注册
+      let isVerify = this.verfyUser()
+      if(isVerify){
+        let user = new AV.User()
       user.setUsername(this.formData.username)
       user.setPassword(this.formData.password)
-      user.signUp().then(function(signupUser){
-        console.log(signupUser)
-        // console.log(AV.User.current())
-      },function(error){
-        alert(error.rawMessage)
-      })
+      user.signUp().then((signupUser)=>{
+      this.close()
+      window.location.reload()    
+      },(error)=>{
+        this.isExist =true//错误信息
+      });
+      }
+    },
+    verfyUser(){ //验证用户输入信息是否合法
+      let checkUsername = this.formData.username
+      let checkPassWord = this.formData.password
+      if(checkUsername.includes(' ') || checkUsername.length < 4 ){//判断用户名是否合法
+          this.isErrorName =true
+      }else if(checkPassWord.includes(' ') || checkPassWord.length <8){//判断密码是否合法
+        this.isErrorName = false //如果进入到这一步说明用户名输入合法
+        this.isErrorWord = true
+      }else{
+        this.isErrorWord = false//如果进入到这一步说明用户名和密码都是合法的
+          return true
+      }
     }
-  }
+   }
 }
 </script>
 <style lang="scss">
@@ -162,5 +191,11 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.error-msg{
+  color:red; 
+  position:relative;
+  top:15px;
+  font-weight:bold;
 }
 </style>

@@ -13,7 +13,7 @@ data(){
     }
 },
   methods:{
-    select(){
+    select(){//图片预览
         let url = window.URL.createObjectURL || window.webkitURL.createObjectURL;
         let file = this.$refs.selector.files[0]
         this.imgSrc= url(file)
