@@ -2,7 +2,7 @@
 <div>
   <header class="topbar">
     <div class="logo">
-      <a href="">
+      <a href="/">
       <span>QuickResumer</span>
       </a>
     </div>
@@ -54,7 +54,7 @@ export default {
           })
       this.saveOrUpdate()
     },
-    fetchResume(){
+    fetchResume(){//获取用户数据
         if(this.currentuser){
       this.loginActive=false
       this.hasLogin = true
@@ -111,11 +111,11 @@ export default {
     saveResume(){//保存简历数据
       let Resume = AV.Object.extend('AllResume')
       let userResume = new Resume()
-      let acl = new AV.ACL()
+      let acl = new AV.ACL() //设置用户权限
       acl.setReadAccess(AV.User.current(),true)
       acl.setWriteAccess(AV.User.current(),true)
-      userResume.set('content',this.fakeresume)
-      userResume.setACL(acl)
+      userResume.set('content',this.fakeresume)//设置用户单独数据内容
+      userResume.setACL(acl)//设置用户权限
       userResume.save().then((resume)=>{
        this.fakeresume.id = resume.id
          this.$message({
@@ -126,10 +126,25 @@ export default {
         alert(error.rawMessage)
       })
     },
-    logout(){//注销方法
-      AV.User.logOut()
-      this.userInfo = null
-      window.location.reload()
+    logout(){//用户注销方法
+      this.$confirm('如果未保存,注销将会失去当前修改数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          AV.User.logOut()
+          this.userInfo = null
+          window.location.reload()
+          this.$message({
+            type: 'success',
+            message: '注销成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });          
+        });
     },
     changeCover(data){//改变模态框
       console.log(data)
