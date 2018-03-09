@@ -48,7 +48,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/js/',
+    assetsPublicPath: '/vue-resume/dist/',
 
     /**
      * Source Maps

@@ -5,6 +5,7 @@
      <Editor :resume="resume"  v-show="Show"></Editor>
      <Preview :resume="resume" :class="{showUp:!Show}"></Preview>
     </main>
+    <button class="print-btn" @click="print" v-show="!Show">打印简历</button>
     <button class="showOut" @click="showOut" v-show="!Show">退出预览</button>
   </div>
 </template>
@@ -55,6 +56,9 @@ export default {
     showOut(){
       this.Show = true
     },
+    print(){
+      window.print()
+    },
     saveResume(data){
       console.log(data)
       this.resume = data
@@ -69,7 +73,7 @@ body {
   height: 100%;
   width: 100%;
 }
-main {
+#app main {
   height: 100%;
   display: flex;
 }
@@ -131,8 +135,24 @@ background: linear-gradient(to top, #fff, #076585);
    right:55px;
    cursor: pointer;
  }
+ .print-btn:hover{
+   background: rgba(71, 185, 174, 0.8)
+ }
  .showOut:hover{
-   background: rgba(60,175,163,.8)
+   background: rgba(71, 185, 174, 0.8)
+ }
+ .print-btn{
+   width:100px;
+   padding: 15px;
+   border-radius: 5px;
+   background:#3cafa3;
+   border:0;
+   outline: none;
+   color:snow;
+   position: fixed;
+   bottom:90px;
+   right:55px;
+   cursor: pointer;
  }
  .showUp{
    margin: 20px auto !important;

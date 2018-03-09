@@ -129,7 +129,7 @@ export default {
       label{
         display: block;
         position: absolute;
-        top:28px;
+        top:21px;
         left:10px;
         color:#d9d9d9;
         font-size:20px;
